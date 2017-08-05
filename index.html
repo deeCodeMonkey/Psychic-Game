@@ -1,0 +1,80 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Guess letter</title>
+    <!-- Added link to the jQuery library -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
+    <!-- Added a link to Bootstrap-->
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/css/bootstrap.min.css" integrity="sha384-1q8mTJOASx8j1Au+a5WDVnPi2lkFfwwEAa8hDDdjZlpLegxhjVME1fgjWPGmkzs7" crossorigin="anonymous">
+</head>
+<body>
+    <div class="jumbotron">
+        <button id="startNewGame" class="btn btn-primary">Start New Game</button>
+        <h1 class="text-center">The Psychic Game</h1>
+        <h2 class="text-center" id="won"></h2>
+        <h2 class="text-center" id="lost"></h2>
+        <h2 class="text-center"><b>Guess What Letter I Am Thinking Of:</b></h2>
+        <h2 class="text-center" id="your-letter"></h2>
+        <h2 class="text-center" id="message"></h2>
+
+    </div>
+    <!-- Here we have div called "randomLetter" where our random number will go -->
+    <h1 class="text-center" id="random-letter"></h1>
+    <script type="text/javascript">
+
+        $(document).ready(runGame); //start a game at load
+
+        var won = 0;
+        var lost = 0;
+
+        $("#startNewGame").click(runGame); //button to re-start game
+
+        function runGame(event) {
+
+            //generate psychic letter
+            function generateRandomLetter() {
+                var letter1 = "ABCDEFGHIJKLMNOPQURSTUVWXYZ";
+                var random = letter1.substr(Math.floor(Math.random() * 28), 1);
+                return random;
+            }
+            var letter = generateRandomLetter(); //return ramdom and place in var letter
+            console.log(letter); //show psychic letter in console
+
+            //enter letter guesses
+            var yourLetters = new Array(); //create array
+            var index = 0; //starting point in array
+            var maxGuess = 9;
+            var ifWon = false;
+
+            $("body").keyup(function (e) { //at each key stroke
+                if (index < maxGuess && !ifWon) { //index starts at zero, ends at 8
+                    var temp = String.fromCharCode(e.which); //got letter
+                    yourLetters[index++] = temp; //letter input into yourLetters array
+                    $("#your-letter").html("Your Guesses: " + yourLetters.join("")); //present the array items together
+                 
+                    if (letter === temp) { //if ramdom letter = temp
+                        $("#message").html("You Win!");
+                        ifWon = true; //change won to true, then this IF function will not run again on next key stroke
+                        won++;
+                    } else {
+                        $("#message").html("Wrong. Guesses Left: " + (maxGuess - index)); //else continiue on next key stroke
+                        if (index === maxGuess && !ifWon) {
+                            lost++;
+                        }
+                    }
+
+                    $("#won").html("Wins: " + won);
+                    $("#lost").html("Losses: " + lost);
+                } 
+                    
+            });
+
+            $("#won").html("Wins: " + won);
+            $("#lost").html("Losses: " + lost);
+
+
+        }
+    </script>
+</body>
+</html>
